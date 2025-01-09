@@ -31,7 +31,7 @@ export class ClientEntity {
   @Field()
   riskProfile: CreditRiskProfileEnum;
 
-  @Column()
+  @Column({ default: 0 })
   @Field()
   borrowingCapacity: number;
 

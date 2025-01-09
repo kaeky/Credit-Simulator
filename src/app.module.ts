@@ -4,11 +4,11 @@ import { AppService } from './app.service';
 import { typeOrmConfig } from './config/database.config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ClientModule } from './client/client.module';
-import { CreditModule } from './credits/credit.module';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { InterestRateModule } from './credits/interest-rates/interest-rate.module';
 import { InsurancesModule } from './insurances/insurances.module';
+import { OffersModule } from './credits/offers/offers.module';
 
 @Module({
   imports: [
@@ -19,9 +19,9 @@ import { InsurancesModule } from './insurances/insurances.module';
       playground: false,
     }),
     ClientModule,
-    CreditModule,
     InterestRateModule,
     InsurancesModule,
+    OffersModule,
   ],
   controllers: [AppController],
   providers: [AppService],

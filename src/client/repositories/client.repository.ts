@@ -13,4 +13,8 @@ export class ClientRepository {
   public find = this.clientRepository.find.bind(this.clientRepository);
 
   public save = this.clientRepository.save.bind(this.clientRepository);
+
+  public getClientById(id: number) {
+    return this.clientRepository.findOne({ where: { id } });
+  }
 }
