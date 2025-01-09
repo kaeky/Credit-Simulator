@@ -9,4 +9,11 @@ export class InterestRateRepository {
     @InjectRepository(InterestRateEntity)
     private readonly interestRatesRepository: Repository<InterestRateEntity>,
   ) {}
+  public find = this.interestRatesRepository.find.bind(
+    this.interestRatesRepository,
+  );
+
+  public save = this.interestRatesRepository.save.bind(
+    this.interestRatesRepository,
+  );
 }

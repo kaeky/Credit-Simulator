@@ -12,27 +12,28 @@ import { CreditRiskProfileEnum } from '../../risk-profile/types/risk-profile.typ
 @ObjectType()
 export class InterestRateEntity {
   @PrimaryGeneratedColumn()
+  @Field()
   id: number;
 
   @Column()
   @Field()
-  profile: CreditRiskProfileEnum;
+  riskProfile: CreditRiskProfileEnum;
 
   @Column()
   @Field()
-  min_range: number;
+  minRange: number;
 
-  @Column()
+  @Column({ type: 'bigint' })
   @Field()
-  max_range: number;
+  maxRange: number;
 
-  @Column()
+  @Column({ type: 'float' })
   @Field()
   rate: number;
 
   @CreateDateColumn()
-  created_at: Date;
+  createdAt: Date;
 
   @UpdateDateColumn()
-  updated_at: Date;
+  updatedAt: Date;
 }
