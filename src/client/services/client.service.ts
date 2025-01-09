@@ -11,6 +11,10 @@ export class ClientService {
     return this.clientRepository.find();
   }
 
+  getClientById(id: number): Promise<ClientEntity> {
+    return this.clientRepository.getClientById(id);
+  }
+
   createClient(client: CreateClientDto): Promise<ClientEntity> {
     return this.clientRepository.save(client);
   }

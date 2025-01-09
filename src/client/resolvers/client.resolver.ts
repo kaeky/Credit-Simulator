@@ -13,6 +13,11 @@ export class ClientResolver {
     return this.clientService.getClients();
   }
 
+  @Query(() => ClientEntity)
+  public async getClientById(@Args('id') id: number): Promise<ClientEntity> {
+    return this.clientService.getClientById(id);
+  }
+
   @Mutation(() => ClientEntity)
   public async saveClient(
     @Args('input') input: CreateClientDto,

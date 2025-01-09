@@ -7,7 +7,7 @@ export class AddBorrowingCapacityInClient1736459380037
 
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(
-      `ALTER TABLE "dim_client" ADD "borrowingCapacity" integer NOT NULL`,
+      `ALTER TABLE "dim_client" ADD "borrowingCapacity" integer NOT NULL DEFAULT 0`,
     );
   }
 

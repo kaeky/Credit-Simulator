@@ -8,5 +8,6 @@ import { ClientRepository } from './repositories/client.repository';
 @Module({
   imports: [TypeOrmModule.forFeature([ClientEntity])],
   providers: [ClientResolver, ClientService, ClientRepository],
+  exports: [ClientService],
 })
 export class ClientModule {}
