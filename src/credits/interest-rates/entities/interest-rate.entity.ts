@@ -15,7 +15,7 @@ export class InterestRateEntity {
   @Field()
   id: number;
 
-  @Column()
+  @Column({ enum: CreditRiskProfileEnum })
   @Field()
   riskProfile: CreditRiskProfileEnum;
 
