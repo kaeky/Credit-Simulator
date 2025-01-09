@@ -1,8 +1,12 @@
 import { Module } from '@nestjs/common';
-import { InsurancesService } from './insurances.service';
-import { InsurancesResolver } from './insurances.resolver';
+import { InsurancesService } from './services/insurances.service';
+import { InsurancesResolver } from './resolvers/insurances.resolver';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { InsuranceEntity } from './entities/insurance.entity';
+import { InsuranceRepository } from './repositories/insurance.repository';
 
 @Module({
-  providers: [InsurancesResolver, InsurancesService],
+  imports: [TypeOrmModule.forFeature([InsuranceEntity])],
+  providers: [InsurancesResolver, InsurancesService, InsuranceRepository],
 })
 export class InsurancesModule {}
