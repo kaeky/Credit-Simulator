@@ -31,6 +31,10 @@ export class ClientEntity {
   @Field()
   riskProfile: CreditRiskProfileEnum;
 
+  @Column()
+  @Field()
+  borrowingCapacity: number;
+
   @CreateDateColumn()
   createdAt: Date;
 
