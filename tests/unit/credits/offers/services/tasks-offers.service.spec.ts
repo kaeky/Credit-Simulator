@@ -5,6 +5,8 @@ import { OptimalLoanCalculationService } from '../../../../../src/credits/simula
 import { InsurancesService } from '../../../../../src/insurances/services/insurances.service';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { Test, TestingModule } from '@nestjs/testing';
+import { GENERATE_OFFER } from '../../../../../src/credits/offers/constants/offer.constant';
+import { CreditStatusEnum } from '../../../../../src/credits/offers/types/credit-status.type';
 
 describe('TasksOffersService', () => {
   let service: TasksOffersService;
@@ -64,7 +66,74 @@ describe('TasksOffersService', () => {
     jest.clearAllMocks();
   });
 
-  it('should be defined', () => {
-    expect(service).toBeDefined();
+  it('should generate offers for each simulation and emit GENERATE_OFFER events', async () => {
+    // Arrange
+    const simulations = [
+      {
+        client: {
+          id: 1,
+          age: 30,
+          riskProfile: 'AA',
+          borrowingCapacity: 1000000,
+        },
+      },
+      {
+        client: {
+          id: 2,
+          age: 45,
+          riskProfile: 'BB',
+          borrowingCapacity: 2000000,
+        },
+      },
+    ];
+
+    simulationLogService.getSimulationLog.mockResolvedValue(simulations);
+    calculateInterestRateService.basicInterestRate.mockResolvedValue({
+      rate: 0.05,
+    });
+    insuranceService.getInsuranceByAge.mockResolvedValue({ percentage: 0.01 });
+    optimalLoanCalculationService.calculateOptimalLoanAmount.mockReturnValue(
+      150000,
+    );
+    optimalLoanCalculationService.calculateOptimalTerm.mockReturnValue(48);
+
+    // Act
+    await service.generateOffers();
+
+    // Assert
+    expect(simulationLogService.getSimulationLog).toHaveBeenCalled();
+    expect(
+      calculateInterestRateService.basicInterestRate,
+    ).toHaveBeenCalledTimes(simulations.length);
+    expect(calculateInterestRateService.basicInterestRate).toHaveBeenCalledWith(
+      'AA',
+    );
+    expect(calculateInterestRateService.basicInterestRate).toHaveBeenCalledWith(
+      'BB',
+    );
+    expect(insuranceService.getInsuranceByAge).toHaveBeenCalledTimes(
+      simulations.length,
+    );
+    expect(insuranceService.getInsuranceByAge).toHaveBeenCalledWith(30);
+    expect(insuranceService.getInsuranceByAge).toHaveBeenCalledWith(45);
+    expect(
+      optimalLoanCalculationService.calculateOptimalLoanAmount,
+    ).toHaveBeenCalledTimes(simulations.length);
+    expect(
+      optimalLoanCalculationService.calculateOptimalTerm,
+    ).toHaveBeenCalledTimes(simulations.length);
+    expect(eventEmitter.emit).toHaveBeenCalledTimes(simulations.length);
+    expect(eventEmitter.emit).toHaveBeenCalledWith(GENERATE_OFFER, {
+      amount: 150000,
+      clientId: 1,
+      status: CreditStatusEnum.ACTIVE,
+      term: 48,
+    });
+    expect(eventEmitter.emit).toHaveBeenCalledWith(GENERATE_OFFER, {
+      amount: 150000,
+      clientId: 2,
+      status: CreditStatusEnum.ACTIVE,
+      term: 48,
+    });
   });
 });
