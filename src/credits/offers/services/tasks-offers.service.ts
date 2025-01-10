@@ -50,7 +50,5 @@ export class TasksOffersService {
         term: optimalTerm,
       });
     }
-
-    // this.simulationLogService.createSimulationLog();
   }
 }
