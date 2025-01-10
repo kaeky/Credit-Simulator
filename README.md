@@ -1,99 +1,153 @@
+# NestJS Microservices Starter Project
+
 <p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
+  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo_text.svg" width="320" alt="Nest Logo" /></a>
 </p>
-
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
-
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
 
 ## Description
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+This repository contains a application for simulate credits built using the [NestJS](https://github.com/nestjs/nest)
+framework:
 
-## Project setup
+## Authentication
+This project uses Don't use authentication, but you can implement it with features such as: 
+- JWT (JSON Web Tokens) for secure API authentication.
+- OAuth 2.0 for integrating third-party login services (Google, Facebook, etc.).
+## Documentation
+ ### Sequence Diagram
+  ```bash
+  Usuario             |API Gateway (GraphQL)| Servicios                    | Base de Datos
+--------------------|---------------------|------------------------------|----------------------
+   |                  |                     |                              |
+   | Peticiones       |                     |                              |
+   |----------------->|                     |                              |
+   |                  |Solicitudes          |                              |
+   |                  |-------------------->|                              |
+   |                  |                     | Consultar                    |
+   |                  |                     |----------------------------> |
+   |                  |                     | Datos del cliente            |
+   |                  |                     |<---------------------------- |
+   |                  | Procesar solicitud  |                              |
+   |                  |<--------------------|                              |
+   | Respuesta        |                     |                              |
+   |<-----------------|                     |                              |
+  ```
+## Data flow diagram
+<p align="center">
+  <a href="https://imgur.com/P8RL5aw" target="blank"><img src="https://i.imgur.com/P8RL5aw.png" alt="Data flow diagram"/></a>
+</p>
+
+## Architecture Diagram
+  ### Not implemented yet
+<p align="center">
+  <a href="https://i.imgur.com/1PS95ub.png" target="blank"><img src="https://i.imgur.com/1PS95ub.png" alt="Data flow diagram"/></a>
+</p>
+
+## Component and Modules
+  ### 1. Clients Module
+  **Description**: Manages client data within the system.  
+  **Functionality**:
+  - Allows for adding, updating, and retrieving client information.
+  - Provides a CRUD interface (except delete) for managing client records.
+  
+  ### 2. Credits Module
+  **Description**: Handles the configuration of credit-related data, such as interest rates and loan ranges.  
+  **Functionality**:
+  - Allows editing and managing interest rates.
+  - Manages loan ranges for different types of credit.
+  
+  ### 3. Offers Module
+  **Description**: Manages the creation and management of credit offers for clients.  
+  **Functionality**:
+  - Creates credit offers based on client data and credit parameters.
+  - Links clients to specific credit offers.
+  
+  ### 4. Simulator Module
+  **Description**: Simulates credit scenarios based on client input and available credit parameters.  
+  **Functionality**:
+  - Simulates different credit scenarios (loan amount, interest rate, term) based on the client's financial capacity.
+  - Calculates the most suitable loan and interest rate for a client.
+  
+  ### 5. Insurances Module
+  **Description**: Manages insurance-related data, specifically insurance rates based on the client's age.  
+  **Functionality**:
+  - Allows management of insurance rates for different age groups.
+  - Retrieves applicable insurance rates based on the client's age.
+  
+  ### 6. Test Module
+  **Description**: Contains unit tests for ensuring the correct functionality of all other modules.  
+  **Functionality**:
+  - Runs unit tests for individual components.
+  - Verifies the correctness of business logic and processes.
+  
+## Opportunities for Improvement
+- ### More Validations
+  - **Data Redundancy Prevention**:
+    - Implement validations to ensure that redundant or duplicate data is not inserted into the system. This could include:
+    - Checking for duplicate entries when creating or updating records.
+    - Enforcing uniqueness constraints at the database level for critical fields (e.g., email, username).
+    - Use GraphQL resolvers and services to validate incoming data before saving it to the database.
+  - **Error Handling**:
+    - Improve error handling by providing meaningful error messages without exposing sensitive information (e.g., stack traces or internal implementation details).
+    - Ensure that all potential validation errors are properly captured and returned to the client in a structured manner.
+- ### Authentication
+    - **Endpoints Security**: 
+      - Ensure that all sensitive API endpoints are secured using authentication mechanisms such as JWT or OAuth 2.0 to prevent unauthorized access.
+      - Implement role-based access control (RBAC) to limit access to specific resources based on user roles.
+      - Consider enabling two-factor authentication (2FA) for users accessing critical operations or sensitive data.
+
+    - **Password Management**:
+      - Enforce strong password policies for user accounts, including minimum length, complexity, and expiration periods.
+      - Use secure password hashing algorithms (e.g., bcrypt, Argon2) for storing passwords in the database.
+
+    - **Session Management**:
+      - Implement secure session handling, including setting proper session expiration times and using secure cookies for session storage.
+      - Use token revocation mechanisms to invalidate sessions when necessary (e.g., when a user logs out or changes their password).
+
+    - **Audit Logging**:
+      - Implement audit logging to track authentication-related events, such as login attempts, password changes, and role modifications. This will help in identifying potential security breaches and responding to incidents more effectively.
+
+## Database Setup
+
+### Step 1: Create a PostgreSQL Database with Docker
+
+Run the following command to set up a PostgreSQL database instance using Docker:
 
 ```bash
-$ npm install
+docker run -d --restart always \
+  --name <CustomNameContainer> \
+  -e POSTGRES_PASSWORD=<CustomPsword> \
+  -e PGDATA=/var/lib/postgresql/data/pgdata \
+  -v /c/Postgresql/volumes/cajasocial/data:/var/lib/postgresql/data/ \
+  -p 5433:5432 postgres
 ```
-
-## Compile and run the project
-
+### Step 2: Connect to the PostgreSQL Database
+Once the Docker container is running, connect to the PostgreSQL instance using a client such as psql or a database management tool. Create a database named inlaze or any other preferred name:
 ```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+CREATE DATABASE cajasocial;
 ```
 
-## Run tests
-
+### Step 3: Clone the Repository
+Clone the repository to your local machine:
 ```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+git clone https://github.com/kaeky/Credit-Simulator
 ```
+#### The repository contains each module with its own services and test files
 
-## Deployment
-
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
-
+### Step 4: Environment Variables
+create a .env file and add the following environment variables like the .env.example file and database created in step 1.
+### Step 5: Running the Project
+  - In the root folder open a terminal and run the following commands:
 ```bash
-$ npm install -g mau
-$ mau deploy
+# Install dependencies
+npm install
+
+# Run migrations
+npm run migration:run
+
+# Run in development mode
+npm run start:dev
+
+# Run in production mode
+npm run start:prod
 ```
-
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
-
-## Resources
-
-Check out a few resources that may come in handy when working with NestJS:
-
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
