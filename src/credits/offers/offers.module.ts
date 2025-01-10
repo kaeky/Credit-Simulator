@@ -7,12 +7,16 @@ import { ClientModule } from '../../client/client.module';
 import { OfferRepository } from './repositories/offer.repository';
 import { TasksOffersService } from './services/tasks-offers.service';
 import { SimulatorModule } from '../simulator/simulator.module';
+import { InterestRateModule } from '../interest-rates/interest-rate.module';
+import { InsurancesModule } from '../../insurances/insurances.module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([OfferEntity]),
     ClientModule,
     SimulatorModule,
+    InterestRateModule,
+    InsurancesModule,
   ],
   providers: [
     OffersResolver,

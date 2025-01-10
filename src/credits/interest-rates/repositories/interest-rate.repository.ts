@@ -30,4 +30,13 @@ export class InterestRateRepository {
       },
     });
   }
+
+  public basicInterestRate(riskProfile: CreditRiskProfileEnum) {
+    return this.interestRatesRepository.findOne({
+      where: {
+        riskProfile,
+        minRange: 0,
+      },
+    });
+  }
 }

@@ -12,6 +12,7 @@ import { SimulationLogService } from './services/simulation-log.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { SimulationEntity } from './entities/simulation.entity';
 import { SimulationRepository } from './repositories/simulation.repository';
+import { OptimalLoanCalculationService } from './services/optimal-loan-calculation.service';
 
 @Module({
   imports: [
@@ -29,7 +30,8 @@ import { SimulationRepository } from './repositories/simulation.repository';
     ClientValidationService,
     SimulationLogService,
     SimulationRepository,
+    OptimalLoanCalculationService,
   ],
-  exports: [SimulationLogService],
+  exports: [SimulationLogService, OptimalLoanCalculationService],
 })
 export class SimulatorModule {}

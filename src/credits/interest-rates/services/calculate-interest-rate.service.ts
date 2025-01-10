@@ -16,4 +16,8 @@ export class CalculateInterestRateService {
       riskProfile,
     );
   }
+
+  public basicInterestRate(riskProfile: CreditRiskProfileEnum) {
+    return this.interestRateRepository.basicInterestRate(riskProfile);
+  }
 }
