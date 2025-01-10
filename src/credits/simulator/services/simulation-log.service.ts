@@ -3,6 +3,8 @@ import { SimulationRepository } from '../repositories/simulation.repository';
 import { OnEvent } from '@nestjs/event-emitter';
 import { GENERATE_SIMULATION } from '../constants/simulator.constant';
 import { ClientEntity } from '../../../client/entities/client.entity';
+import { GENERATE_OFFER } from '../../offers/constants/offer.constant';
+import { CreateOfferDto } from '../../offers/dto/create-offer.dto';
 
 @Injectable()
 export class SimulationLogService {
@@ -20,5 +22,10 @@ export class SimulationLogService {
       return null;
     }
     return this.simulationRepository.save({ client });
+  }
+
+  @OnEvent(GENERATE_OFFER)
+  async removeSimulationLog(input: CreateOfferDto) {
+    return this.simulationRepository.removeClientSimulations(input.clientId);
   }
 }

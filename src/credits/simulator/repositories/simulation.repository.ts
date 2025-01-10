@@ -20,4 +20,8 @@ export class SimulationRepository {
       where: { client: { id: client.id } },
     });
   }
+
+  public removeClientSimulations(clientId: number) {
+    return this.simulationRepository.delete({ client: { id: clientId } });
+  }
 }

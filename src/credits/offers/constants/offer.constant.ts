@@ -1,0 +1,1 @@
+export const GENERATE_OFFER = 'GENERATE_OFFER';
