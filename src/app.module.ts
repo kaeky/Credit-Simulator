@@ -10,6 +10,8 @@ import { InterestRateModule } from './credits/interest-rates/interest-rate.modul
 import { InsurancesModule } from './insurances/insurances.module';
 import { OffersModule } from './credits/offers/offers.module';
 import { SimulatorModule } from './credits/simulator/simulator.module';
+import { EventEmitterModule } from '@nestjs/event-emitter';
+import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
   imports: [
@@ -19,6 +21,8 @@ import { SimulatorModule } from './credits/simulator/simulator.module';
       autoSchemaFile: true,
       playground: false,
     }),
+    EventEmitterModule.forRoot(),
+    ScheduleModule.forRoot(),
     ClientModule,
     InterestRateModule,
     InsurancesModule,

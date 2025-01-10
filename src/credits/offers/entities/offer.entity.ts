@@ -27,6 +27,10 @@ export class OfferEntity {
   @Field(() => CreditStatusEnum)
   status: CreditStatusEnum;
 
+  @Column()
+  @Field()
+  term: number;
+
   @CreateDateColumn()
   createdAt: Date;
 

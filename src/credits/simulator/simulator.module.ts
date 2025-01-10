@@ -8,9 +8,18 @@ import { InsuranceCalculationService } from './services/insurance-calculation.se
 import { InterestCalculationService } from './services/interest-calculation.service';
 import { PaymentScheduleGenerator } from './services/payment-schedule-generator.service';
 import { ClientValidationService } from './services/client-validation.service';
+import { SimulationLogService } from './services/simulation-log.service';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { SimulationEntity } from './entities/simulation.entity';
+import { SimulationRepository } from './repositories/simulation.repository';
 
 @Module({
-  imports: [InterestRateModule, ClientModule, InsurancesModule],
+  imports: [
+    TypeOrmModule.forFeature([SimulationEntity]),
+    InterestRateModule,
+    ClientModule,
+    InsurancesModule,
+  ],
   providers: [
     SimulatorResolver,
     SimulatorService,
@@ -18,6 +27,9 @@ import { ClientValidationService } from './services/client-validation.service';
     InterestCalculationService,
     PaymentScheduleGenerator,
     ClientValidationService,
+    SimulationLogService,
+    SimulationRepository,
   ],
+  exports: [SimulationLogService],
 })
 export class SimulatorModule {}

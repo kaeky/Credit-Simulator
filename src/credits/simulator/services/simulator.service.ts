@@ -8,6 +8,8 @@ import { InterestCalculationService } from './interest-calculation.service';
 import { InsuranceCalculationService } from './insurance-calculation.service';
 import { PaymentScheduleGenerator } from './payment-schedule-generator.service';
 import { ClientValidationService } from './client-validation.service';
+import { EventEmitter2 } from '@nestjs/event-emitter';
+import { GENERATE_SIMULATION } from '../constants/simulator.constant';
 
 @Injectable()
 export class SimulatorService {
@@ -19,12 +21,14 @@ export class SimulatorService {
     private readonly insuranceCalculationService: InsuranceCalculationService,
     private readonly paymentScheduleGenerator: PaymentScheduleGenerator,
     private readonly clientValidationService: ClientValidationService,
+    private readonly eventEmitter: EventEmitter2,
   ) {}
   async generateSimulation(
     input: CreateSimulationDto,
   ): Promise<SimulationCreditDto> {
-    const { riskProfile, borrowingCapacity, age } =
-      await this.clientService.getClientById(input.clientId);
+    const client = await this.clientService.getClientById(input.clientId);
+    const { riskProfile, borrowingCapacity, age } = client;
+    this.eventEmitter.emit(GENERATE_SIMULATION, client);
 
     const { rate } =
       await this.calculateInterestRateService.calculateInterestRate(
