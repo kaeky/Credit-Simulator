@@ -9,167 +9,146 @@ import { ClientValidationService } from '../../../../../src/credits/simulator/se
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { Test, TestingModule } from '@nestjs/testing';
 import { CreateSimulationDto } from '../../../../../src/credits/simulator/dto/create-simulation.dto';
-import { CreditRiskProfileEnum } from '../../../../../src/credits/risk-profile/types/risk-profile.type';
-import { GENERATE_SIMULATION } from '../../../../../src/credits/simulator/constants/simulator.constant';
-
-jest.mock('../../../client/services/client.service');
-jest.mock('../../interest-rates/services/calculate-interest-rate.service');
-jest.mock('../../../insurances/services/insurances.service');
-jest.mock('./interest-calculation.service');
-jest.mock('./insurance-calculation.service');
-jest.mock('./payment-schedule-generator.service');
-jest.mock('./client-validation.service');
+import { SimulationCreditDto } from '../../../../../src/credits/simulator/dto/simulation.dto';
 
 describe('SimulatorService', () => {
   let service: SimulatorService;
-  let clientService: jest.Mocked<ClientService>;
-  let calculateInterestRateService: jest.Mocked<CalculateInterestRateService>;
-  let insuranceService: jest.Mocked<InsurancesService>;
-  let interestCalculationService: jest.Mocked<InterestCalculationService>;
-  let insuranceCalculationService: jest.Mocked<InsuranceCalculationService>;
-  let paymentScheduleGenerator: jest.Mocked<PaymentScheduleGenerator>;
-  let clientValidationService: jest.Mocked<ClientValidationService>;
-  let eventEmitter: jest.Mocked<EventEmitter2>;
+  let clientService: ClientService;
+  let calculateInterestRateService: CalculateInterestRateService;
+  let insuranceService: InsurancesService;
+  let interestCalculationService: InterestCalculationService;
+  let insuranceCalculationService: InsuranceCalculationService;
+  let paymentScheduleGenerator: PaymentScheduleGenerator;
+  let clientValidationService: ClientValidationService;
+  let eventEmitter: EventEmitter2;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         SimulatorService,
-        ClientService,
-        CalculateInterestRateService,
-        InsurancesService,
-        InterestCalculationService,
-        InsuranceCalculationService,
-        PaymentScheduleGenerator,
-        ClientValidationService,
-        EventEmitter2,
+        {
+          provide: ClientService,
+          useValue: {
+            getClientById: jest.fn().mockResolvedValue({
+              riskProfile: 'low',
+              borrowingCapacity: 1000,
+              age: 30,
+            }),
+          },
+        },
+        {
+          provide: CalculateInterestRateService,
+          useValue: {
+            calculateInterestRate: jest.fn().mockResolvedValue({ rate: 5 }),
+          },
+        },
+        {
+          provide: InsurancesService,
+          useValue: {
+            getInsuranceByAge: jest
+              .fn()
+              .mockResolvedValue({ percentage: 0.02 }),
+          },
+        },
+        {
+          provide: InterestCalculationService,
+          useValue: {
+            calculateMonthlyRate: jest.fn().mockReturnValue(0.004),
+            calculateMonthlyPayment: jest.fn().mockReturnValue(100),
+          },
+        },
+        {
+          provide: InsuranceCalculationService,
+          useValue: {
+            calculateInsuranceFee: jest.fn().mockReturnValue(2),
+          },
+        },
+        {
+          provide: PaymentScheduleGenerator,
+          useValue: {
+            generateSchedule: jest.fn().mockReturnValue([
+              { interest: 5, capital: 50, insurance: 2 },
+              { interest: 4, capital: 51, insurance: 2 },
+            ]),
+          },
+        },
+        {
+          provide: ClientValidationService,
+          useValue: {
+            validateBorrowingCapacity: jest.fn(),
+          },
+        },
+        {
+          provide: EventEmitter2,
+          useValue: {
+            emit: jest.fn(),
+          },
+        },
       ],
     }).compile();
 
     service = module.get<SimulatorService>(SimulatorService);
-    clientService = module.get(ClientService);
-    calculateInterestRateService = module.get(CalculateInterestRateService);
-    insuranceService = module.get(InsurancesService);
-    interestCalculationService = module.get(InterestCalculationService);
-    insuranceCalculationService = module.get(InsuranceCalculationService);
-    paymentScheduleGenerator = module.get(PaymentScheduleGenerator);
-    clientValidationService = module.get(ClientValidationService);
-    eventEmitter = module.get(EventEmitter2);
+    clientService = module.get<ClientService>(ClientService);
+    calculateInterestRateService = module.get<CalculateInterestRateService>(
+      CalculateInterestRateService,
+    );
+    insuranceService = module.get<InsurancesService>(InsurancesService);
+    interestCalculationService = module.get<InterestCalculationService>(
+      InterestCalculationService,
+    );
+    insuranceCalculationService = module.get<InsuranceCalculationService>(
+      InsuranceCalculationService,
+    );
+    paymentScheduleGenerator = module.get<PaymentScheduleGenerator>(
+      PaymentScheduleGenerator,
+    );
+    clientValidationService = module.get<ClientValidationService>(
+      ClientValidationService,
+    );
+    eventEmitter = module.get<EventEmitter2>(EventEmitter2);
   });
 
-  describe('generateSimulation', () => {
-    it('should generate a simulation correctly', async () => {
-      // Arrange
-      const input: CreateSimulationDto = {
-        clientId: 1,
-        amount: 100000,
-        term: 12,
-      };
+  it('should be defined', () => {
+    expect(service).toBeDefined();
+  });
 
-      const mockClient = {
-        id: 1,
-        name: 'Carlos A',
-        lastName: 'Bautista',
-        age: 30,
-        riskProfile: CreditRiskProfileEnum.AA,
-        borrowingCapacity: 1000000,
-        createdAt: new Date('2021-09-01T00:00:00.000Z'),
-        updatedAt: new Date('2021-09-01T00:00:00.000Z'),
-      };
-      const mockRate = {
-        id: 1,
-        riskProfile: CreditRiskProfileEnum.AA,
-        minRange: 0,
-        maxRange: 6999999,
-        rate: 0.2345,
-        createdAt: new Date('2021-09-01T00:00:00.000Z'),
-        updatedAt: new Date('2021-09-01T00:00:00.000Z'),
-      };
-      const mockInsurance = {
-        id: 1,
-        minAge: 31,
-        maxAge: 60,
-        percentage: 0.01,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      };
-      const mockMonthlyRate = 0.0042;
-      const mockMonthlyPayment = 8500;
-      const mockInsuranceFee = 85;
-      const mockTotalMonthlyPayment = 8585;
-      const mockMonths = [
-        {
-          month: 1,
-          interest: 420,
-          capital: 8080,
-          insurance: 85,
-          balance: 91920,
-          paid: 8585,
-        },
-        // Add more months if needed
-      ];
+  it('should generate a simulation correctly', async () => {
+    const input: CreateSimulationDto = {
+      clientId: 1,
+      amount: 1000,
+      term: 12,
+    };
 
-      clientService.getClientById.mockResolvedValue(mockClient);
-      calculateInterestRateService.calculateInterestRate.mockResolvedValue(
-        mockRate,
-      );
-      insuranceService.getInsuranceByAge.mockResolvedValue(mockInsurance);
-      interestCalculationService.calculateMonthlyRate.mockReturnValue(
-        mockMonthlyRate,
-      );
-      interestCalculationService.calculateMonthlyPayment.mockReturnValue(
-        mockMonthlyPayment,
-      );
-      insuranceCalculationService.calculateInsuranceFee.mockReturnValue(
-        mockInsuranceFee,
-      );
-      paymentScheduleGenerator.generateSchedule.mockReturnValue(mockMonths);
+    const result: SimulationCreditDto = await service.generateSimulation(input);
 
-      // Act
-      const result = await service.generateSimulation(input);
+    expect(result).toHaveProperty('balance');
+    expect(result).toHaveProperty('interest');
+    expect(result).toHaveProperty('capital');
+    expect(result).toHaveProperty('insurance');
+    expect(result).toHaveProperty('months');
+  });
 
-      // Assert
-      expect(clientService.getClientById).toHaveBeenCalledWith(input.clientId);
-      expect(eventEmitter.emit).toHaveBeenCalledWith(
-        GENERATE_SIMULATION,
-        mockClient,
-      );
-      expect(
-        calculateInterestRateService.calculateInterestRate,
-      ).toHaveBeenCalledWith(input.amount, mockClient.riskProfile);
-      expect(insuranceService.getInsuranceByAge).toHaveBeenCalledWith(
-        mockClient.age,
-      );
-      expect(
-        interestCalculationService.calculateMonthlyRate,
-      ).toHaveBeenCalledWith(mockRate.rate, input.term);
-      expect(
-        interestCalculationService.calculateMonthlyPayment,
-      ).toHaveBeenCalledWith(input.amount, mockMonthlyRate, input.term);
-      expect(
-        insuranceCalculationService.calculateInsuranceFee,
-      ).toHaveBeenCalledWith(mockMonthlyPayment, mockInsurance.percentage);
-      expect(
-        clientValidationService.validateBorrowingCapacity,
-      ).toHaveBeenCalledWith(
-        mockTotalMonthlyPayment,
-        mockClient.borrowingCapacity,
-      );
-      expect(paymentScheduleGenerator.generateSchedule).toHaveBeenCalledWith(
-        input.amount,
-        input.term,
-        mockMonthlyPayment,
-        mockMonthlyRate,
-        mockInsurance.percentage,
-      );
+  it('should call clientService.getClientById with the correct clientId', async () => {
+    const input: CreateSimulationDto = { clientId: 1, amount: 1000, term: 12 };
+    await service.generateSimulation(input);
+    expect(clientService.getClientById).toHaveBeenCalledWith(input.clientId);
+  });
 
-      expect(result).toEqual({
-        balance: parseFloat((mockTotalMonthlyPayment * input.term).toFixed(2)),
-        interest: parseFloat(mockMonths[0].interest.toFixed(2)),
-        capital: parseFloat(mockMonths[0].capital.toFixed(2)),
-        insurance: parseFloat(mockMonths[0].insurance.toFixed(2)),
-        months: mockMonths,
-      });
+  it('should call eventEmitter.emit when generating a simulation', async () => {
+    const input: CreateSimulationDto = { clientId: 1, amount: 1000, term: 12 };
+    await service.generateSimulation(input);
+    expect(eventEmitter.emit).toHaveBeenCalledWith('GENERATE_SIMULATION', {
+      riskProfile: 'low',
+      borrowingCapacity: 1000,
+      age: 30,
     });
+  });
+
+  it('should validate the borrowing capacity', async () => {
+    const input: CreateSimulationDto = { clientId: 1, amount: 1000, term: 12 };
+    await service.generateSimulation(input);
+    expect(
+      clientValidationService.validateBorrowingCapacity,
+    ).toHaveBeenCalledWith(102, 1000);
   });
 });

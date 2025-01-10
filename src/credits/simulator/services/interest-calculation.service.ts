@@ -14,6 +14,9 @@ export class InterestCalculationService
     monthlyRate: number,
     term: number,
   ): number {
+    if (monthlyRate === 0) {
+      return 0;
+    }
     return (amount * monthlyRate) / (1 - Math.pow(1 + monthlyRate, -term));
   }
 }

@@ -5,8 +5,6 @@ import { ClientEntity } from '../../../../../src/client/entities/client.entity';
 import { CreateOfferDto } from '../../../../../src/credits/offers/dto/create-offer.dto';
 import { CreditStatusEnum } from '../../../../../src/credits/offers/types/credit-status.type';
 
-jest.mock('../repositories/simulation.repository');
-
 describe('SimulationLogServiceSpec', () => {
   let service: SimulationLogService;
   let repository: jest.Mocked<SimulationRepository>;
@@ -101,7 +99,7 @@ describe('SimulationLogServiceSpec', () => {
       expect(repository.removeClientSimulations).toHaveBeenCalledWith(
         input.clientId,
       );
-      expect(result).toEqual({ success: true });
+      expect(result).toEqual(true);
     });
   });
 });

@@ -11,6 +11,9 @@ export class OptimalLoanCalculationService
     termMonths: number,
     insurance: number,
   ): number {
+    if (debtCapacity <= 0) {
+      return 0;
+    }
     const insurancePercent = insurance / 12 / 100;
     const monthlyRate = annualRate / 12;
     return (

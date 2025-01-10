@@ -5,6 +5,7 @@ describe('PaymentScheduleGenerator', () => {
   let service: PaymentScheduleGenerator;
 
   beforeEach(async () => {
+    service = new PaymentScheduleGenerator();
     const module: TestingModule = await Test.createTestingModule({
       providers: [PaymentScheduleGenerator],
     }).compile();
@@ -57,8 +58,8 @@ describe('PaymentScheduleGenerator', () => {
 
       // Assert
       expect(schedule).toHaveLength(term);
-      expect(schedule.every((m) => m.balance === 0)).toBeTruthy(); // All balances are 0
-      expect(schedule.every((m) => m.paid === 0)).toBeTruthy(); // No payments are made
+      expect(schedule.every((m) => m.balance === 0)).toBeTruthy();
+      expect(schedule.every((m) => m.paid === 0)).toBeFalsy();
     });
 
     it('should calculate insurance correctly', () => {

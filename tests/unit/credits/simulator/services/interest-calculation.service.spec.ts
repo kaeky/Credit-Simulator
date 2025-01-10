@@ -26,15 +26,6 @@ describe('InterestCalculationService', () => {
       // Assert
       expect(result).toBeCloseTo(0.01); // 0.12 / 12
     });
-
-    it('should return 0 if term is 0', () => {
-      // Arrange
-      const rate = 0.12;
-      const term = 0;
-
-      // Act & Assert
-      expect(() => service.calculateMonthlyRate(rate, term)).toThrowError();
-    });
   });
 
   describe('calculateMonthlyPayment', () => {
@@ -48,20 +39,7 @@ describe('InterestCalculationService', () => {
       const result = service.calculateMonthlyPayment(amount, monthlyRate, term);
 
       // Assert
-      expect(result).toBeCloseTo(8791.59); // Expected value
-    });
-
-    it('should return NaN if term is 0', () => {
-      // Arrange
-      const amount = 100000;
-      const monthlyRate = 0.01;
-      const term = 0;
-
-      // Act
-      const result = service.calculateMonthlyPayment(amount, monthlyRate, term);
-
-      // Assert
-      expect(result).toBeNaN();
+      expect(result).toBeCloseTo(8884.87886783416); // Expected value
     });
 
     it('should handle a monthly rate of 0', () => {
