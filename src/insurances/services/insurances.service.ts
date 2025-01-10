@@ -12,6 +12,10 @@ export class InsurancesService {
     return this.insuranceRepository.find();
   }
 
+  getInsuranceByAge(age: number): Promise<InsuranceEntity> {
+    return this.insuranceRepository.getInsuranceByAge(age);
+  }
+
   saveInsurance(insurance: CreateInsuranceDto): Promise<InsuranceEntity> {
     return this.insuranceRepository.save(insurance);
   }

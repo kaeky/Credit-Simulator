@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { LessThanOrEqual, MoreThanOrEqual, Repository } from 'typeorm';
 import { InsuranceEntity } from '../entities/insurance.entity';
 
 @Injectable()
@@ -16,4 +16,10 @@ export class InsuranceRepository {
   public save = this.insuranceEntityRepository.save.bind(
     this.insuranceEntityRepository,
   );
+
+  public getInsuranceByAge(age: number) {
+    return this.insuranceEntityRepository.findOne({
+      where: { minAge: LessThanOrEqual(age), maxAge: MoreThanOrEqual(age) },
+    });
+  }
 }

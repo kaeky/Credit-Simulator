@@ -8,5 +8,6 @@ import { InsuranceRepository } from './repositories/insurance.repository';
 @Module({
   imports: [TypeOrmModule.forFeature([InsuranceEntity])],
   providers: [InsurancesResolver, InsurancesService, InsuranceRepository],
+  exports: [InsurancesService],
 })
 export class InsurancesModule {}

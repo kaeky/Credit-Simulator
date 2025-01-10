@@ -4,6 +4,7 @@ import { InterestRateEntity } from './entities/interest-rate.entity';
 import { InterestRateResolver } from './resolvers/interest-rate.resolver';
 import { InterestRateService } from './services/interest-rate.service';
 import { InterestRateRepository } from './repositories/interest-rate.repository';
+import { CalculateInterestRateService } from './services/calculate-interest-rate.service';
 
 @Module({
   imports: [TypeOrmModule.forFeature([InterestRateEntity])],
@@ -11,6 +12,8 @@ import { InterestRateRepository } from './repositories/interest-rate.repository'
     InterestRateResolver,
     InterestRateService,
     InterestRateRepository,
+    CalculateInterestRateService,
   ],
+  exports: [CalculateInterestRateService],
 })
 export class InterestRateModule {}
