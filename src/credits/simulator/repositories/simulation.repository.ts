@@ -21,7 +21,9 @@ export class SimulationRepository {
     });
   }
 
-  public removeClientSimulations(clientId: number) {
-    return this.simulationRepository.delete({ client: { id: clientId } });
+  public async removeClientSimulations(clientId: number) {
+    return this.simulationRepository
+      .delete({ client: { id: clientId } })
+      .then(() => true);
   }
 }
