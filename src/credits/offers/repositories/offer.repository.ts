@@ -4,6 +4,7 @@ import { OfferEntity } from '../entities/offer.entity';
 import { Repository } from 'typeorm';
 import { ClientEntity } from '../../../client/entities/client.entity';
 import { CreateOfferDto } from '../dto/create-offer.dto';
+import { UpdateOfferDto } from '../dto/update-offer.dto';
 
 @Injectable()
 export class OfferRepository {
@@ -19,6 +20,10 @@ export class OfferRepository {
     client: ClientEntity,
   ): Promise<OfferEntity> {
     return this.offerRepository.save({ client, ...offer });
+  }
+
+  public async updateOffer(offer: UpdateOfferDto): Promise<OfferEntity> {
+    return this.offerRepository.save(offer);
   }
 
   public getOfferByClient(clientId: number) {

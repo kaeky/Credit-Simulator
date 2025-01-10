@@ -4,6 +4,7 @@ import { ClientService } from '../../../client/services/client.service';
 import { CreateOfferDto } from '../dto/create-offer.dto';
 import { OnEvent } from '@nestjs/event-emitter';
 import { GENERATE_OFFER } from '../constants/offer.constant';
+import { UpdateOfferDto } from '../dto/update-offer.dto';
 
 @Injectable()
 export class OffersService {
@@ -23,5 +24,9 @@ export class OffersService {
   async saveOffer(offer: CreateOfferDto) {
     const client = await this.clientService.getClientById(offer.clientId);
     return this.offerRepository.saveOffer(offer, client);
+  }
+
+  async updateOffer(offer: UpdateOfferDto) {
+    return this.offerRepository.updateOffer(offer);
   }
 }

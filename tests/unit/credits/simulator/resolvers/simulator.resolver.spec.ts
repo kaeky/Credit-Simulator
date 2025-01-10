@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { SimulatorResolver } from './resolvers/simulator.resolver';
-import { SimulatorService } from './services/simulator.service';
+import { SimulatorResolver } from '../../../../../credits/simulator/resolvers/simulator.resolver';
+import { SimulatorService } from '../../../../../credits/simulator/services/simulator.service';
 
 describe('SimulatorResolver', () => {
   let resolver: SimulatorResolver;

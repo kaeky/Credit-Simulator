@@ -2,6 +2,7 @@ import { Resolver, Query, Args, Mutation } from '@nestjs/graphql';
 import { OffersService } from '../services/offers.service';
 import { OfferEntity } from '../entities/offer.entity';
 import { CreateOfferDto } from '../dto/create-offer.dto';
+import { UpdateOfferDto } from '../dto/update-offer.dto';
 
 @Resolver(() => OfferEntity)
 export class OffersResolver {
@@ -20,5 +21,10 @@ export class OffersResolver {
   @Mutation(() => OfferEntity)
   saveOffer(@Args('input') input: CreateOfferDto) {
     return this.offersService.saveOffer(input);
+  }
+
+  @Mutation(() => OfferEntity)
+  updateOffer(@Args('input') input: UpdateOfferDto) {
+    return this.offersService.updateOffer(input);
   }
 }
