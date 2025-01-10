@@ -7,6 +7,7 @@ import { EventEmitter2 } from '@nestjs/event-emitter';
 import { Test, TestingModule } from '@nestjs/testing';
 import { GENERATE_OFFER } from '../../../../../src/credits/offers/constants/offer.constant';
 import { CreditStatusEnum } from '../../../../../src/credits/offers/types/credit-status.type';
+import { CreditRiskProfileEnum } from '../../../../../src/credits/risk-profile/types/risk-profile.type';
 
 describe('TasksOffersService', () => {
   let service: TasksOffersService;
@@ -89,9 +90,22 @@ describe('TasksOffersService', () => {
 
     simulationLogService.getSimulationLog.mockResolvedValue(simulations);
     calculateInterestRateService.basicInterestRate.mockResolvedValue({
+      id: 1,
+      riskProfile: CreditRiskProfileEnum.AA,
+      minRange: 0,
+      maxRange: 6999999,
       rate: 0.05,
+      createdAt: new Date(),
+      updatedAt: new Date(),
     });
-    insuranceService.getInsuranceByAge.mockResolvedValue({ percentage: 0.01 });
+    insuranceService.getInsuranceByAge.mockResolvedValue({
+      id: 1,
+      minAge: 31,
+      maxAge: 60,
+      percentage: 0.01,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    });
     optimalLoanCalculationService.calculateOptimalLoanAmount.mockReturnValue(
       150000,
     );
