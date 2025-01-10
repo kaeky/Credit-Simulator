@@ -122,7 +122,7 @@ docker run -d --restart always \
   -p 5433:5432 postgres
 ```
 ### Step 2: Connect to the PostgreSQL Database
-Once the Docker container is running, connect to the PostgreSQL instance using a client such as psql or a database management tool. Create a database named inlaze or any other preferred name:
+Once the Docker container is running, connect to the PostgreSQL instance using a client such as psql or a database management tool. Create a database named cajasocial or any other preferred name:
 ```bash
 CREATE DATABASE cajasocial;
 ```
