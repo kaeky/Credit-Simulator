@@ -151,3 +151,26 @@ npm run start:dev
 # Run in production mode
 npm run start:prod
 ```
+### Step 6: Test the Project
+  - go to https://www.postman.com/kaeky/workspace/credit-simulator and import the collection in postman
+  - run each request to test the project
+### Step 7: Tests
+    - In the root folder open a terminal and run the following commands:
+```bash
+# unit tests
+$ npm run test
+# coverage
+$ npm run test:cov  
+```
+
+## If you want to deploy the project in a docker container, you can use the following commands:
+```bash
+# Create a network
+$ docker network create my-network
+# Assign the network to the database container
+$ docker network connect my-network <CustomNameContainer>
+# Modify the .env file to use the database container name as the host
+# Build the image with the local.DockerFile
+$ docker build -t credit-simulator -f ./docker/local.DockerFile .
+$ docker run --network my-network --name back-container -d -p 4000:4000 credit-simulator
+```
